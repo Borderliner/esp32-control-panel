@@ -10,13 +10,14 @@
 #include <ESPAsyncWebServer.h>
 #include <WiFi.h>
 
-#include "templates/error_404.h"
-#include "templates/error_405.h"
-#include "templates/index.h"
-#include "templates/led.h"
-#include "templates/temperature.h"
+#include "templates/pages/home.h"
+#include "templates/pages/led.h"
+#include "templates/pages/temperature.h"
 
-#define LED_PIN 18  // ESP32 pin GPIO18 connected to LED
+#include "templates/pages/error_404.h"
+#include "templates/pages/error_405.h"
+
+#define LED_PIN 2  // ESP32 pin GPIO02 connected to LED
 
 const char *ssid = "WiWi (Secure)";          // CHANGE IT
 const char *password = "juikjuik";  // CHANGE IT
@@ -46,22 +47,22 @@ void setup() {
     Serial.println("Connecttion Successful!");
 
     // Print the ESP32's IP address
-    Serial.print("ESP32 Web Server's IP address: ");
+    Serial.print("Device Web Server's IP address: ");
     Serial.println(WiFi.localIP());
 
     // Serve the specified HTML pages
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Serial.println("Web Server: home page");
         String html =
-            HTML_CONTENT_HOME;  // Use the HTML content from the index.h file
+            page_home.c_str();  // Use the HTML content from the index.h file
         request->send(200, "text/html", html);
     });
 
     server.on(
-        "/temperature.html", HTTP_GET, [](AsyncWebServerRequest *request) {
+        "/temperature", HTTP_GET, [](AsyncWebServerRequest *request) {
             Serial.println("Web Server: temperature page");
             String html =
-                HTML_CONTENT_TEMPERATURE;  // Use the HTML content from the
+                page_temperature.c_str();  // Use the HTML content from the
                                            // temperature.h file
             float temperature = getTemperature();
             html.replace("%TEMPERATURE_VALUE%",
@@ -69,7 +70,7 @@ void setup() {
             request->send(200, "text/html", html);
         });
 
-    server.on("/led.html", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/led", HTTP_GET, [](AsyncWebServerRequest *request) {
         Serial.print("Web Server: LED page");
         // Check for the 'state' parameter in the query string
         if (request->hasArg("state")) {
@@ -88,7 +89,7 @@ void setup() {
         Serial.println();
 
         String html =
-            HTML_CONTENT_LED;  // Use the HTML content from the led.h file
+            page_led.c_str();  // Use the HTML content from the led.h file
         html.replace("%LED_STATE%",
                      LED_state ? "ON" : "OFF");  // update the LED state
         request->send(200, "text/html", html);
@@ -99,20 +100,20 @@ void setup() {
         if (request->method() == HTTP_GET) {
             // Handle 404 Not Found error
             Serial.println("Web Server: Not Found");
-            String html = HTML_CONTENT_404;  // Use the HTML content from the
+            String html = page_404.c_str();  // Use the HTML content from the
                                              // error_404.h file
             request->send(404, "text/html", html);
         } else {
             // Handle 405 Method Not Allowed error
             Serial.println("Web Server: Method Not Allowed");
-            String html = HTML_CONTENT_405;  // Use the HTML content from the
+            String html = page_405.c_str();  // Use the HTML content from the
                                              // error_405.h file
             request->send(405, "text/html", html);
         }
     });
 
     server.begin();
-    Serial.println("ESP32 Web server started");
+    Serial.println("Web server started and running...");
 }
 
 void loop() {
