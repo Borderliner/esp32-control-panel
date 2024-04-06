@@ -11,9 +11,7 @@
 
 #include "templates/templates.h"
 
-#include <string>
-
-std::string get_layout_header(const char* title) {
+static String get_layout_header(const char* title) {
     return replace_string(R"=====(
         <!DOCTYPE html>
         <html lang="en">
@@ -24,12 +22,12 @@ std::string get_layout_header(const char* title) {
             <title>{title}</title>
         </head>
         <body>
-        )=====", "{title}", title);
+        )=====", "{title}", title).c_str();
 }
 
-std::string get_layout_footer() {
-    return std::string(R"=====(
+static String get_layout_footer() {
+    return R"=====(
         </body>
         </html>
-        )=====");
+        )=====";
 }

@@ -8,14 +8,13 @@
  */
 
 #pragma once
-#include <string>
 
 #include "templates/layout.h"
 
 #define PAGE_TEMP_TITLE "Temperatures"
 
-const std::string page_temperature = get_layout_header(PAGE_TEMP_TITLE) +
-                             std::string(R"=====(
+static String page_temperature = get_layout_header(PAGE_TEMP_TITLE) +
+    R"=====(
         <style>
             body { font-family: "Georgia"; text-align: center; font-size: width/2pt;}
             h1 { font-weight: bold; font-size: width/2pt;}
@@ -125,4 +124,5 @@ const std::string page_temperature = get_layout_header(PAGE_TEMP_TITLE) +
             </script>
         <h1>ESP32 - Web Temperature</h1>
         <canvas id="cvs"></canvas>
-    )=====") + get_layout_footer();
+    )=====" +
+    get_layout_footer();

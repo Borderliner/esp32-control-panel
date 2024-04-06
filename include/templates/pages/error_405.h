@@ -8,16 +8,15 @@
 
 #pragma once
 #include "templates/layout.h"
-#include <string>
 
 #define PAGE_405_TITLE "405 - Method Not Allowed"
 
-const std::string page_405 =
-    get_layout_header(PAGE_405_TITLE) +
-    std::string(R"=====(
+static String page_405 = get_layout_header(PAGE_405_TITLE) +
+    R"=====(
         <h1>405 - Method Not Allowed</h1>
         <p>Oops! The requested method is not allowed for this resource.</p>
         <p>Please check your request or go back to the <a href="/">homepage</a>.</p>
         <p>Or check <a href="https://esp32io.com/tutorials/esp32-web-server-multiple-pages"> Esp32 Web Server</a> tutorial.</p>
-    )=====") +
+
+    )=====" +
     get_layout_footer();
