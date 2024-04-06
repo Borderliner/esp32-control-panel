@@ -11,13 +11,20 @@
 
 #define PAGE_LED_TITLE "LED"
 
-static String page_led = get_layout_header(PAGE_LED_TITLE) +
-    R"=====(
-        <h1>LED Page</h1>
-        <p>LED State: <span style="color: red;">%LED_STATE%</span></p>
-        <a href='/led?state=on'>Turn ON</a>
-        <br><br>
-        <a href='/led?state=off'>Turn OFF</a>
-    )=====" +
-    get_layout_footer();
-
+static Page page_led = Page {
+    PageOptions {
+        "fa", // language
+        PAGE_LED_TITLE, // title
+        "", // css
+        "", // js
+        R"=====(
+            <h1>LED Page</h1>
+            <p>LED State: <span style="color: red;">{LED_STATE}</span></p>
+            <a href='/led?state=on'>Turn ON</a>
+            <br><br>
+            <a href='/led?state=off'>Turn OFF</a>
+        )=====", // body
+        "", // header_template
+        "" // footer_template
+    }
+};

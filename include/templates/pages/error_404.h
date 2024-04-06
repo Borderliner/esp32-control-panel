@@ -11,12 +11,19 @@
 
 #define PAGE_404_TITLE "404 - Page Not Found"
 
-static String page_404 = get_layout_header(PAGE_404_TITLE) +
-    R"=====(
-        <h1>404</h1>
-        <p>Oops! The page you are looking for could not be found on Esp32 Web Server.</p>
-        <p>Please check the URL or go back to the <a href="/">homepage</a>.</p>
-        <p>Or check <a href="https://esp32io.com/tutorials/esp32-web-server-multiple-pages"> Esp32 Web Server</a> tutorial.</p>
-
-    )=====" +
-    get_layout_footer();
+static Page page_404 = Page {
+    PageOptions {
+        "fa", // language
+        PAGE_404_TITLE, // title
+        "", // css
+        "", // js
+        R"=====(
+            <h1>404</h1>
+            <p>Oops! The page you are looking for could not be found on Esp32 Web Server.</p>
+            <p>Please check the URL or go back to the <a href="/">homepage</a>.</p>
+            <p>Or check <a href="https://esp32io.com/tutorials/esp32-web-server-multiple-pages"> Esp32 Web Server</a> tutorial.</p>
+        )=====", // body
+        "", // header_template
+        "" // footer_template
+    }
+};

@@ -24,7 +24,7 @@ const char *password = "juikjuik";  // CHANGE IT
 
 AsyncWebServer server(80);
 
-int LED_state = LOW;
+int led_state = LOW;
 
 float getTemperature() {
     // YOUR SENSOR IMPLEMENTATION HERE
@@ -53,18 +53,20 @@ void setup() {
     // Serve the specified HTML pages
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Serial.println("Web Server: home page");
-        String html = page_home;  // Use the HTML content from the index.h file
+        String html = page_home.compile_template();  // Use the HTML content from the index.h file
         request->send(200, "text/html", html);
     });
 
     server.on(
         "/temperature", HTTP_GET, [](AsyncWebServerRequest *request) {
             Serial.println("Web Server: temperature page");
-            String html = page_temperature;  // Use the HTML content from the
-                                           // temperature.h file
             float temperature = getTemperature();
-            html.replace("%TEMPERATURE_VALUE%",
-                         String(temperature));  // update the temperature value
+            String html = page_temperature.compile_template_and_replace(
+                String("{TEMPERATURE_VALUE}"),
+                String(temperature)
+            );  // Use the HTML content from the
+                                           // temperature.h file
+            
             request->send(200, "text/html", html);
         });
 
@@ -74,36 +76,49 @@ void setup() {
         if (request->hasArg("state")) {
             String state = request->arg("state");
             if (state == "on") {
-                LED_state = HIGH;
+                led_state = HIGH;
             } else if (state == "off") {
-                LED_state = LOW;
+                led_state = LOW;
             }
 
             // control LED here
-            digitalWrite(LED_PIN, LED_state);
+            digitalWrite(LED_PIN, led_state);
             Serial.print(" => turning LED to ");
             Serial.print(state);
         }
         Serial.println();
 
-        String html = page_led;  // Use the HTML content from the led.h file
-        html.replace("%LED_STATE%",
-                     LED_state ? "ON" : "OFF");  // update the LED state
+        String html = page_led.compile_template_and_replace(
+            String("{LED_STATE}"),
+            led_state ? "ON" : "OFF"
+        );
         request->send(200, "text/html", html);
     });
+
+    server.on(
+        "^\\/assets\\/(.*)$", HTTP_GET, [](AsyncWebServerRequest *request) {
+            String asset_name = request->pathArg(0);
+            Serial.println("Web Server: Asset " + asset_name);
+            float temperature = getTemperature();
+            String html = page_temperature.compile_template_and_replace(
+                String("{TEMPERATURE_VALUE}"),
+                String(temperature)
+            );  // Use the HTML content from the temperature.h file
+            request->send(200, "text/html", html);
+        });
 
     // 404 and 405 error handler
     server.onNotFound([](AsyncWebServerRequest *request) {
         if (request->method() == HTTP_GET) {
             // Handle 404 Not Found error
             Serial.println("Web Server: Not Found");
-            String html = page_404;  // Use the HTML content from the
+            String html = page_404.compile_template();  // Use the HTML content from the
                                              // error_404.h file
             request->send(404, "text/html", html);
         } else {
             // Handle 405 Method Not Allowed error
             Serial.println("Web Server: Method Not Allowed");
-            String html = page_405;  // Use the HTML content from the
+            String html = page_405.compile_template();  // Use the HTML content from the
                                              // error_405.h file
             request->send(405, "text/html", html);
         }

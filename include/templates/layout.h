@@ -9,25 +9,86 @@
 
 #pragma once
 
-#include "templates/templates.h"
+struct PageOptions {
+    String lang;
+    String title;
+    String css;
+    String js;
+    String body;
+    String header_template;
+    String footer_template;
+};
 
-static String get_layout_header(const char* title) {
-    return replace_string(R"=====(
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="data:,">
-            <title>{title}</title>
-        </head>
-        <body>
-        )=====", "{title}", title).c_str();
-}
+class Page {
+public:
+    Page(String lang, String title, String css, String js, String body) {
+        setup_default_templates();
+        lang.isEmpty() ? this->m_page_options.lang = "fa" : this->m_page_options.lang = lang;
+        this->m_page_options.title = title;
+        this->m_page_options.css = css;
+        this->m_page_options.js = js;
+        this->m_page_options.body = body;
+    }
 
-static String get_layout_footer() {
-    return R"=====(
-        </body>
-        </html>
-        )=====";
-}
+    Page(PageOptions page_options) {
+        if (page_options.header_template.isEmpty() || page_options.footer_template.isEmpty()) {
+            setup_default_templates();
+        }
+        this->m_page_options.lang = page_options.lang;
+        this->m_page_options.title = page_options.title;
+        this->m_page_options.css = page_options.css;
+        this->m_page_options.js = page_options.js;
+        this->m_page_options.body = page_options.body;
+    }
+
+    Page() {
+        setup_default_templates();
+        this->m_page_options.lang = "fa";
+    }
+
+    String compile_template(boolean cache = true) {
+        String header_template = this->m_page_options.header_template;
+        header_template.replace("{LANG}", this->m_page_options.lang);
+        header_template.replace("{TITLE}", this->m_page_options.title);
+        header_template.replace("{CSS}", this->m_page_options.css);
+
+        String footer_template = this->m_page_options.footer_template;
+        footer_template.replace("{JAVASCRIPT}", this->m_page_options.js);
+
+        String result = header_template + this->m_page_options.body + footer_template;
+        if (cache) {
+            template_cache = result;
+        }
+        return result;
+    }
+
+    String compile_template_and_replace(const String& find, const String& replace, boolean cache = true) {
+        String result = compile_template(cache);
+        result.replace(find, replace);
+        return result;
+    }
+
+private:
+    PageOptions m_page_options;
+    String template_cache;
+
+    void setup_default_templates() {
+        this->m_page_options.header_template = R"=====(
+            <!DOCTYPE html>
+            <html lang="{LANG}">
+            <head>
+                <title>{TITLE}</title>            
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="icon" href="data:,">
+                {CSS}
+            </head>
+            <body>
+            )=====";
+        this->m_page_options.footer_template = R"=====(
+            </body>
+            {JAVASCRIPT}
+            </html>
+            )=====";
+    }
+};
