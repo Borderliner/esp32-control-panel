@@ -12,18 +12,29 @@
 
 static Page page_home = Page {
     PageOptions {
-        "fa", // language
-        PAGE_HOME_TITLE, // title
-        "", // css
-        "", // js
+        // language
+        "fa",
+        // title
+        PAGE_HOME_TITLE,
+        // css
+        R"=====(
+            
+        )=====",
+        // js
+        R"=====(
+            
+        )=====", 
+        // body
         R"=====(
             <h1>Welcome to the Home Page</h1>
             <ul>
                 <li><a href="/led">LED Page</a></li>
                 <li><a href="/temperature">Temperature Page</a></li>
             </ul>
-        )=====", // body
-        "", // header_template
-        "" // footer_template
+        )=====",
+        // header_template
+        "",
+        // footer_template
+        ""
     }
 };

@@ -7,8 +7,9 @@
  * https://esp32io.com/tutorials/esp32-web-server-multiple-pages
  */
 
-#include <ESPAsyncWebServer.h>
 #include <WiFi.h>
+#include <SPIFFS.h>
+#include <ESPAsyncWebServer.h>
 
 #include "templates/pages/home.h"
 #include "templates/pages/led.h"
@@ -49,6 +50,13 @@ void setup() {
     // Print the ESP32's IP address
     Serial.print("Device Web Server's IP address: ");
     Serial.println(WiFi.localIP());
+
+    Serial.flush();
+    !SPIFFS.begin(true) ? Serial.println("Filesystem mount failed") : Serial.println("Filesystem mount successful");
+
+    server
+        .serveStatic("/assets", SPIFFS, "/")
+        .setCacheControl("max-age=600");
 
     // Serve the specified HTML pages
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -95,7 +103,7 @@ void setup() {
         request->send(200, "text/html", html);
     });
 
-    server.on(
+/*     server.on(
         "^\\/assets\\/(.*)$", HTTP_GET, [](AsyncWebServerRequest *request) {
             String asset_name = request->pathArg(0);
             Serial.println("Web Server: Asset " + asset_name);
@@ -105,7 +113,7 @@ void setup() {
                 String(temperature)
             );  // Use the HTML content from the temperature.h file
             request->send(200, "text/html", html);
-        });
+        }); */
 
     // 404 and 405 error handler
     server.onNotFound([](AsyncWebServerRequest *request) {

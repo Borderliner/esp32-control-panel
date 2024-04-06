@@ -9,6 +9,17 @@
 
 #pragma once
 
+const char* GLOBAL_JAVASCRIPT = R"====(
+    <script src="/assets/js/lib/alpinejs@3.13.8.min.js"></script>
+    <script src="/assets/js/main.js"></script>
+)====";
+
+const char* GLOBAL_CSS = R"====(
+    <link rel="stylesheet" href="/assets/css/lib/vazirmatn@33.003.css">
+    <link rel="stylesheet" href="/assets/css/lib/meshki@2.5.1.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+)====";
+
 struct PageOptions {
     String lang;
     String title;
@@ -50,9 +61,11 @@ public:
         String header_template = this->m_page_options.header_template;
         header_template.replace("{LANG}", this->m_page_options.lang);
         header_template.replace("{TITLE}", this->m_page_options.title);
+        header_template.replace("{GLOBAL_CSS}", GLOBAL_CSS);
         header_template.replace("{CSS}", this->m_page_options.css);
 
         String footer_template = this->m_page_options.footer_template;
+        footer_template.replace("{GLOBAL_JAVASCRIPT}", GLOBAL_JAVASCRIPT);
         footer_template.replace("{JAVASCRIPT}", this->m_page_options.js);
 
         String result = header_template + this->m_page_options.body + footer_template;
@@ -81,12 +94,14 @@ private:
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="icon" href="data:,">
+                {GLOBAL_CSS}
                 {CSS}
             </head>
             <body>
             )=====";
         this->m_page_options.footer_template = R"=====(
             </body>
+            {GLOBAL_JAVASCRIPT}
             {JAVASCRIPT}
             </html>
             )=====";
