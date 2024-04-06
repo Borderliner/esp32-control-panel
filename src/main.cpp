@@ -44,7 +44,7 @@ void setup() {
         delay(1000);
         Serial.println("Connecting to WiFi...");
     }
-    Serial.println("Connecttion Successful!");
+    Serial.println("Connection Successful!");
 
     // Print the ESP32's IP address
     Serial.print("Device Web Server's IP address: ");
