@@ -1,5 +1,6 @@
 #pragma once
+#include <nlohmann/json.hpp>
 
-class AbstractPageData {
-    JsonObject
-};
+namespace application::templating {
+using PageDataJson = nlohmann::json;
+}

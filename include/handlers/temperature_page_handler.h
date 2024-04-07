@@ -1,7 +1,10 @@
 #pragma once
-#include "templates/pages/temperature.h"
+#include "views/pages/temperature.h"
 
 #include <ESPAsyncWebServer.h>
+#include <templating_engine/page_data.h>
+
+using application::templating::PageDataJson;
 
 float getTemperature() {
     // YOUR SENSOR IMPLEMENTATION HERE
@@ -14,11 +17,10 @@ float getTemperature() {
 void temperature_page_handler(AsyncWebServerRequest *request) {
     Serial.println("Web Server: temperature page");
     float temperature = getTemperature();
-    String html = page_temperature.compile_template_and_replace(
-        String("{TEMPERATURE_VALUE}"),
-        String(temperature));  // Use the HTML content from the
-                                // temperature.h file
+    
+    PageDataJson data;
+    data["TEMPERATURE_VALUE"] = String(temperature);
 
+    String html = page_temperature.render_with_json(data);
     request->send(200, "text/html", html);
 }
-

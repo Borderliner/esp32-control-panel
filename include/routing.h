@@ -1,12 +1,12 @@
 #pragma once
 #include <ESPAsyncWebServer.h>
 
-#include "server/handlers/home_page_handler.h"
-#include "server/handlers/temperature_page_handler.h"
-#include "server/handlers/led_page_handler.h"
-#include "server/handlers/not_found_page_handler.h"
+#include "handlers/home_page_handler.h"
+#include "handlers/temperature_page_handler.h"
+#include "handlers/led_page_handler.h"
+#include "handlers/not_found_page_handler.h"
 
-namespace server::router {
+namespace application::routing {
 void register_routes(AsyncWebServer &server) {
     // Serve the specified HTML pages
     server.on("/", HTTP_GET, home_page_handler);

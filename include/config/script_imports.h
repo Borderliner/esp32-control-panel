@@ -5,8 +5,5 @@ const char* GLOBAL_JAVASCRIPT = R"====(
 )====";
 
 const char* GLOBAL_CSS = R"====(
-    <link rel="stylesheet" href="/assets/css/lib/vazirmatn.css">
-    <link rel="stylesheet" href="/assets/css/lib/meshki.min.css">
-    <link rel="stylesheet" href="/assets/css/lib/meshki.rtl.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 )====";

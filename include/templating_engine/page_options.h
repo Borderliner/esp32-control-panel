@@ -1,5 +1,7 @@
 #pragma once
+#include <WString.h>
 
+namespace application::templating {
 struct PageOptions {
     String lang;
     String title;
@@ -9,3 +11,4 @@ struct PageOptions {
     String header_template;
     String footer_template;
 };
+}

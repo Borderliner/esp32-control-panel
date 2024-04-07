@@ -8,6 +8,7 @@
 
 #pragma once
 #include "templating_engine/page.h"
+using application::templating::Page;
 
 #define PAGE_LED_TITLE "LED"
 

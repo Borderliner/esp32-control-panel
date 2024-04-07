@@ -8,11 +8,13 @@
  */
 
 #pragma once
+#include "templating_engine/page_data.h"
 #include "templating_engine/page_options.h"
 #include "config/script_imports.h"
 
-#include <Arduino.h>
+#include <WString.h>
 
+namespace application::templating {
 class Page {
 public:
     Page(String lang, String title, String css, String js, String body) {
@@ -40,6 +42,47 @@ public:
         this->m_page_options.lang = "fa";
     }
 
+    String render(boolean cache = true) { return compile_template(cache); }
+
+    String render_with_json(PageDataJson data, boolean cache = true) {
+        String rendered_template = compile_template(cache);
+        if (data.is_null()) return rendered_template;
+
+        for (auto& el : data.items()) {
+            String key(el.key().c_str());
+            String value(el.value().dump().c_str());
+            rendered_template.replace(String("{ " + key + " }"), value);
+            rendered_template.replace(String("{" + key + "}"), value);
+        }
+        return rendered_template;
+    }
+
+private:
+    PageOptions m_page_options;
+    String template_cache;
+
+    void setup_default_templates() {
+        this->m_page_options.header_template = R"=====(
+            <!DOCTYPE html>
+            <html lang="{LANG}">
+            <head>
+                <title>{TITLE}</title>            
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="icon" type="image/x-icon" href="/favicon.ico">
+                {GLOBAL_CSS}
+                {CSS}
+            </head>
+            <body>
+            )=====";
+        this->m_page_options.footer_template = R"=====(
+            </body>
+            {GLOBAL_JAVASCRIPT}
+            {JAVASCRIPT}
+            </html>
+            )=====";
+    }
+
     String compile_template(boolean cache = true) {
         String header_template = this->m_page_options.header_template;
         header_template.replace("{LANG}", this->m_page_options.lang);
@@ -57,36 +100,5 @@ public:
         }
         return result;
     }
-
-    String compile_template_and_replace(const String& find, const String& replace, boolean cache = true) {
-        String result = compile_template(cache);
-        result.replace(find, replace);
-        return result;
-    }
-
-private:
-    PageOptions m_page_options;
-    String template_cache;
-
-    void setup_default_templates() {
-        this->m_page_options.header_template = R"=====(
-            <!DOCTYPE html>
-            <html lang="{LANG}">
-            <head>
-                <title>{TITLE}</title>            
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="icon" href="data:,">
-                {GLOBAL_CSS}
-                {CSS}
-            </head>
-            <body>
-            )=====";
-        this->m_page_options.footer_template = R"=====(
-            </body>
-            {GLOBAL_JAVASCRIPT}
-            {JAVASCRIPT}
-            </html>
-            )=====";
-    }
 };
+}

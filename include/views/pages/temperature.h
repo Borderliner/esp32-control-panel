@@ -10,8 +10,9 @@
 #pragma once
 
 #include "templating_engine/page.h"
+using application::templating::Page;
 
-#define PAGE_TEMP_TITLE "Temperatures"
+#define PAGE_TEMP_TITLE "دما"
 
 static Page page_temperature = Page {
     "fa", // language
@@ -36,7 +37,7 @@ static Page page_temperature = Page {
 
             ctx.translate(cvs_width/2, cvs_height - 80);
 
-            update_view({TEMPERATURE_VALUE});
+            update_view({ TEMPERATURE_VALUE });
             }
 
             function update_view(temp) {

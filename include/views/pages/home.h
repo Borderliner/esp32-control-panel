@@ -7,8 +7,9 @@
  */
 #pragma once
 #include "templating_engine/page.h"
+using application::templating::Page;
 
-#define PAGE_HOME_TITLE "Home"
+#define PAGE_HOME_TITLE "خانه"
 
 static Page page_home = Page {
     // language
