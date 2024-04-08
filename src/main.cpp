@@ -20,7 +20,7 @@ void setup() {
     application::fs::setup_filesystem();
     application::wifi::setup_wifi();
     application::server::setup_server().start();
-    Serial.println("Web server started and running...");
+    Serial.println("Application has been initiated and is running...");
 }
 
 void loop() {
