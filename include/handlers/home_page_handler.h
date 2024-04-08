@@ -8,10 +8,6 @@ using application::templating::PageDataJson;
 
 const float MAXIMUM_DRAM_SIZE = 160.00f;
 
-float round_float_to_two(float value) {
-    return ((int)(value * 100 + .5) / 100.0);
-}
-
 void home_page_handler(AsyncWebServerRequest *request) {
     Serial.println("Web Server: home page");
     float heap_used_size = MAXIMUM_DRAM_SIZE - (float(esp_get_free_heap_size()) / 1000.0f);
