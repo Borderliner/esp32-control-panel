@@ -19,24 +19,42 @@ static Page page_home = Page {
     // css
     R"=====(
         <style>
+            .container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                position: unset;
+            }
             .content {
-                min-height: 50vh;
-                height: calc(100vh - 52px - 125px);
+                flex-grow: 1;
                 margin-top: 52px;
             }
-            @media (min-width: 544px) {
-                .content {
-                    height: calc(100vh - 52px - 100px);
-                }
+            .footer {
+                position: unset;
             }
 
-            @media (min-width: 910px) {
-                .content {
-                    height: calc(100vh - 52px - 76px);
-                }
+            .power-button,
+            .restart-button {
+                position: absolute;
+                padding-bottom: unset !important;
+                height: 55px;
             }
-            .content {
-                height: fit-content;
+            .power-button {
+                bottom: 65px;
+            }
+            .restart-button {
+                bottom: 135px;
+            }
+            .power-button span.label,
+            .restart-button span.label {
+                position: relative;
+                bottom: 9px;
+            }
+            .power-button span.label {
+                margin: auto 13px;
+            }
+            .restart-button span.label {
+                margin: auto 5px;
             }
         </style>
     )=====",
@@ -49,46 +67,33 @@ static Page page_home = Page {
         <div class="sidenav push">
             <a href="javascript:void(0);" class="sidenav-close-button" onclick="meshki.closeSidenav()">×</a>
             <a href="/">خانه</a>
-            <a href="https://github.com/Borderliner/Meshki/issues">Issues</a>
-            <a href="https://github.com/Borderliner/Meshki/pulls">Pull Requests</a>
-            <a href="https://github.com/Borderliner/Meshki/releases">Releases</a>
-            <a href="rtl/">RTL Mode (Eastern)</a>
-            <a href="https://github.com/Borderliner/Meshki/blob/master/CHANGELOG.md">Changelog</a>
-            <a href="https://github.com/Borderliner/Meshki/blob/master/LICENSE">License</a>
-            <a href="https://plisio.net/donate/VXKr4hHx" target="_blank">Donate</a>
-            <a href="https://github.com/Borderliner/Meshki/blob/master/README.md">About Meshki</a>
-            <hr class="hide-on-non-mobile">
-            <div class="hide-on-non-mobile">
-                <a href="#buttons-doc" onclick="meshki.closeSidenav()">Buttons</a>
-                <a href="#sidenav-doc" onclick="meshki.closeSidenav()">Sidenav</a>
-                <a href="#navbar-doc" onclick="meshki.closeSidenav()">Navbar</a>
-                <a href="#layout-doc" onclick="meshki.closeSidenav()">Layout System</a>
-                <a href="#form-doc" onclick="meshki.closeSidenav()">Forms</a>
-                <a href="#typography-doc" onclick="meshki.closeSidenav()">Typography</a>
-                <a href="#tables-doc" onclick="meshki.closeSidenav()">Tables</a>
-                <a href="#footer-doc" onclick="meshki.closeSidenav()">Footer</a>
-            </div>
+            <a href="/sensors">سنسورها</a>
+            <a href="/tools">ابزار</a>
+            <a href="/settings">تنظیمات</a>
+            <a href="/about">درباره‌ی ما</a>
             <hr>
-            <button class="button blue medium extern-twitter" onclick="location.href='https://twitter.com/Meshki_UI'"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></button>
-            <button class="button red medium extern-npm" onclick="location.href='https://www.npmjs.com/package/meshki'"><i class="fab fa-npm" aria-hidden="true"></i></button>
-            <button class="button medium extern-github" onclick="location.href='https://github.com/Borderliner/Meshki'"><i class="fab fa-github" aria-hidden="true"></i></button>
-            <a href="javascript:void(0)" disabled="" style="font-size: 1.5rem">Share on:</a>
-            <div class="share-links">
-                <a class="fb-share" href="https://www.facebook.com/sharer/sharer.php?u=https://borderliner.github.io/Meshki/" target="_blank"><i class="fab fa-facebook-square" aria-hidden="true"></i></a>
-                <a class="tw-share" href="https://twitter.com/home?status=https://borderliner.github.io/Meshki/" target="_blank"><i class="fa-brands fa-square-x-twitter" aria-hidden="true"></i></a>
-                <a class="gp-share" href="https://plus.google.com/share?url=https://borderliner.github.io/Meshki/" target="_blank"><i class="fab fa-google-plus-square" aria-hidden="true"></i></a>
-            </div>
+            <button class="button green medium restart-button" onclick="location.href='/restart'">
+                <span class="label">ری استارت</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10m3.935-16.408a.75.75 0 0 1 .467.694v2.715a.75.75 0 0 1-.75.75H13a.75.75 0 0 1-.537-1.274l.762-.78a4.17 4.17 0 0 0-4.224 1.089c-1.668 1.707-1.668 4.483 0 6.19a4.169 4.169 0 0 0 5.998 0a4.394 4.394 0 0 0 1.208-2.472c.058-.418.39-.77.812-.77c.406 0 .742.325.703.729a5.897 5.897 0 0 1-1.65 3.562a5.669 5.669 0 0 1-8.144 0c-2.237-2.29-2.237-5.997 0-8.287a5.666 5.666 0 0 1 6.437-1.208l.75-.768a.75.75 0 0 1 .82-.17" clip-rule="evenodd"/></svg></span>
+            </button>
+            <button class="button red medium power-button" onclick="location.href='/turn_off'">
+                <span class="label">خاموش</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 36 36"><path fill="currentColor" d="M18 2a16 16 0 1 0 16 16A16 16 0 0 0 18 2m.06 17.68a1.28 1.28 0 0 1-1.29-1.28V8.65a1.29 1.29 0 0 1 2.58 0v9.75a1.28 1.28 0 0 1-1.29 1.28M18 27.79a9.88 9.88 0 0 1-5.83-17.94a1.4 1.4 0 0 1 1.94.31a1.37 1.37 0 0 1-.31 1.92a7.18 7.18 0 1 0 11.43 5.8a7.07 7.07 0 0 0-3-5.76A1.37 1.37 0 0 1 22 10.2a1.4 1.4 0 0 1 1.94-.29A9.88 9.88 0 0 1 18 27.79" class="clr-i-solid clr-i-solid-path-1"/><path fill="none" d="M0 0h36v36H0z"/></svg></span>
+            </button>
         </div>
         <div class="container">
             <div class="nav fixed">
                 <ul>
                     <li><a class="logo" href="javascript:void(0);" onclick="meshki.openSidenav()"><i class="fas fa-bars" aria-hidden="true"></i>منوی اصلی</a></li>
-                    <li class="nav-dropdown hide-on-mobile">
-                    <a href="javascript:void(0)" class="nav-dropdown-button">ابزار</a>
-                    <div class="nav-dropdown-content">
-                        <a href="rtl/">یک</a>
-                        <a href="#extra-button-colors">دو</a>
-                    </div>
+                    <li class="nav-dropdown">
+                        <a href="javascript:void(0)" class="nav-dropdown-button">ابزار</a>
+                        <div class="nav-dropdown-content">
+                            <a href="/temperator">دما</a>
+                            <a href="/humidity">رطوبت</a>
+                            <a href="/light">نور</a>
+                            <a href="/sound">صدا</a>
+                            <a href="/camera">دوربین</a>
+                        </div>
                     </li>
                     <li><a href="https://github.com/Borderliner/Meshki">پیوندها</a></li>
                     <li class="nav-dropdown hide-on-mobile">
