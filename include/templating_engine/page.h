@@ -51,6 +51,7 @@ public:
         for (auto& el : data.items()) {
             String key(el.key().c_str());
             String value(el.value().dump().c_str());
+            // value.replace('\"', '\0');
             rendered_template.replace(String("{ " + key + " }"), value);
             rendered_template.replace(String("{" + key + "}"), value);
         }
