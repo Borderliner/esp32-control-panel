@@ -20,7 +20,7 @@ void led_page_handler(AsyncWebServerRequest *request) {
             }
 
             // control LED here
-            digitalWrite(LED_PIN, led_state);
+            digitalWrite(application::pins::LED_PIN, led_state);
             Serial.print(" => Turning LED to ");
             Serial.print(state);
         }

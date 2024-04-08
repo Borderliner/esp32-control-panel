@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "templating_engine/page.h"
+#include "system/templating/page.h"
 using application::templating::Page;
 
 #define PAGE_405_TITLE "405 - Method Not Allowed"

@@ -8,8 +8,8 @@
  */
 
 #pragma once
-#include "templating_engine/page_data.h"
-#include "templating_engine/page_options.h"
+#include "system/templating/page_data.h"
+#include "system/templating/page_options.h"
 #include "config/script_imports.h"
 
 #include <WString.h>
@@ -19,27 +19,27 @@ class Page {
 public:
     Page(String lang, String title, String css, String js, String body) {
         setup_default_templates();
-        lang.isEmpty() ? this->m_page_options.lang = "fa" : this->m_page_options.lang = lang;
-        this->m_page_options.title = title;
-        this->m_page_options.css = css;
-        this->m_page_options.js = js;
-        this->m_page_options.body = body;
+        lang.isEmpty() ? this->page_options.lang = "fa" : this->page_options.lang = lang;
+        this->page_options.title = title;
+        this->page_options.css = css;
+        this->page_options.js = js;
+        this->page_options.body = body;
     }
 
     Page(PageOptions page_options) {
         if (page_options.header_template.isEmpty() || page_options.footer_template.isEmpty()) {
             setup_default_templates();
         }
-        this->m_page_options.lang = page_options.lang;
-        this->m_page_options.title = page_options.title;
-        this->m_page_options.css = page_options.css;
-        this->m_page_options.js = page_options.js;
-        this->m_page_options.body = page_options.body;
+        this->page_options.lang = page_options.lang;
+        this->page_options.title = page_options.title;
+        this->page_options.css = page_options.css;
+        this->page_options.js = page_options.js;
+        this->page_options.body = page_options.body;
     }
 
     Page() {
         setup_default_templates();
-        this->m_page_options.lang = "fa";
+        this->page_options.lang = "fa";
     }
 
     String render(boolean cache = true) { return compile_template(cache); }
@@ -58,12 +58,16 @@ public:
         return rendered_template;
     }
 
+    void clear_cache() {
+        this->template_cache.clear();
+    }
+
 private:
-    PageOptions m_page_options;
+    PageOptions page_options;
     String template_cache;
 
     void setup_default_templates() {
-        this->m_page_options.header_template = R"=====(
+        this->page_options.header_template = R"=====(
             <!DOCTYPE html>
             <html lang="{LANG}">
             <head>
@@ -76,7 +80,7 @@ private:
             </head>
             <body>
             )=====";
-        this->m_page_options.footer_template = R"=====(
+        this->page_options.footer_template = R"=====(
             </body>
             {GLOBAL_JAVASCRIPT}
             {JAVASCRIPT}
@@ -85,17 +89,18 @@ private:
     }
 
     String compile_template(boolean cache = true) {
-        String header_template = this->m_page_options.header_template;
-        header_template.replace("{LANG}", this->m_page_options.lang);
-        header_template.replace("{TITLE}", this->m_page_options.title);
-        header_template.replace("{GLOBAL_CSS}", GLOBAL_CSS);
-        header_template.replace("{CSS}", this->m_page_options.css);
+        if (!this->template_cache.isEmpty()) { return this->template_cache; }
+        String header_template = this->page_options.header_template;
+        header_template.replace("{LANG}", this->page_options.lang);
+        header_template.replace("{TITLE}", this->page_options.title);
+        header_template.replace("{GLOBAL_CSS}", application::scripts::GLOBAL_CSS);
+        header_template.replace("{CSS}", this->page_options.css);
 
-        String footer_template = this->m_page_options.footer_template;
-        footer_template.replace("{GLOBAL_JAVASCRIPT}", GLOBAL_JAVASCRIPT);
-        footer_template.replace("{JAVASCRIPT}", this->m_page_options.js);
+        String footer_template = this->page_options.footer_template;
+        footer_template.replace("{GLOBAL_JAVASCRIPT}", application::scripts::GLOBAL_JAVASCRIPT);
+        footer_template.replace("{JAVASCRIPT}", this->page_options.js);
 
-        String result = header_template + this->m_page_options.body + footer_template;
+        String result = header_template + this->page_options.body + footer_template;
         if (cache) {
             template_cache = result;
         }

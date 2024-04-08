@@ -6,7 +6,7 @@
  * For more detail (instruction and wiring diagram), visit https://esp32io.com/tutorials/esp32-web-server-multiple-pages
  */
 #pragma once
-#include "templating_engine/page.h"
+#include "system/templating/page.h"
 using application::templating::Page;
 
 #define PAGE_HOME_TITLE "خانه"
