@@ -7,6 +7,7 @@
 #include "system/filesystem.h"
 
 namespace application::server {
+static bool is_initialized = false;
 class WebServer {
 private:
     AsyncWebServer *async_web_server;
@@ -30,6 +31,7 @@ public:
             .setCacheControl(CACHE_CONTROL.c_str());
         async_web_server->serveStatic("/favicon.ico", SPIFFS, "/img/favicon.png")
             .setCacheControl(CACHE_CONTROL.c_str());
+        is_initialized = true;
     }
 
     void register_routes() const {

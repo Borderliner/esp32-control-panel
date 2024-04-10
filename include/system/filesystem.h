@@ -3,8 +3,15 @@
 #include <SPIFFS.h>
 
 namespace application::fs {
-    void setup_filesystem() {
-        Serial.flush();
-        !SPIFFS.begin(true) ? Serial.println("ERROR: Filesystem mount failed") : Serial.println("Filesystem mount was successful");
+static bool is_initialized = false;
+void setup_filesystem() {
+    Serial.flush();
+    if (!SPIFFS.begin(true)) {
+        Serial.println("ERROR: Filesystem mount failed");
+        is_initialized = false;
+    } else {
+        Serial.println("Filesystem mount was successful");
+        is_initialized = true;
     }
 }
+}  // namespace application::fs
