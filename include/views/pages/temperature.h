@@ -12,123 +12,136 @@
 #include "application/templating/page.h"
 using application::templating::Page;
 
-#define PAGE_TEMP_TITLE "دما"
+#define PAGE_TEMP_TITLE "سنسور دما/رطوبت/فشار/ارتفاع"
 
 static Page page_temperature = Page {
     "fa", // language
     PAGE_TEMP_TITLE, // title
-    "", // css
     R"====(
         <style>
-            body { font-family: "Georgia"; text-align: center; font-size: width/2pt;}
-            h1 { font-weight: bold; font-size: width/2pt;}
-            h2 { font-weight: bold; font-size: width/2pt;}
-            button { font-weight: bold; font-size: width/2pt;}
-            </style>
-            <script>
-            var cvs_width = 200, cvs_height = 450;
-
-            function init() {
-            var canvas = document.getElementById("cvs");
-            canvas.width = cvs_width;
-            canvas.height = cvs_height + 50;
-
-            var ctx = canvas.getContext("2d");
-
-            ctx.translate(cvs_width/2, cvs_height - 80);
-
-            update_view({ TEMPERATURE_VALUE });
+            .container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                position: unset;
+            }
+            .content {
+                flex-grow: 1;
+                margin-top: 52px;
+            }
+        </style>
+    )====", // css
+    R"====(
+        <script>
+            function take(str, end) {
+                return str.slice(0, end);
             }
 
-            function update_view(temp) {
-            var canvas = document.getElementById("cvs");
-            var ctx = canvas.getContext("2d");
+            $(document).ready(function() {
+                setInterval(function() {
+                    $.ajax({
+                        url: "/bme280/get",
+                        type: "GET",
+                        cache: false,
+                        success: function(data) {
+                            console.log(data);
+                            var temperature = take(data.temperature.toString(), 5);
+                            var humidity = take(data.humidity.toString(), 5);
+                            var pressure = take(data.pressure.toString(), 5);
+                            var altitude = take(data.altitude.toString(), 4);
 
-            var radius = 70;
-            var offset = 5;
-            var width = 45;
-            var height = 330;
+                            $("#temperature_label").text(temperature + "°C");
+                            $("#temperature_progress").text(temperature + "%");
+                            $("#temperature_progress").val(data.temperature);
 
-            ctx.clearRect(-cvs_width/2, -350, cvs_width, cvs_height);
-            ctx.strokeStyle="blue";
-            ctx.fillStyle="blue";
+                            $("#humidity_label").text(humidity + "%");
+                            $("#humidity_progress").text(humidity + "%");
+                            $("#humidity_progress").val(data.humidity);
 
-            //5-step Degree
-            var x = -width/2;
-            ctx.lineWidth=2;
-            for (var i = 0; i <= 100; i+=5) {
-                var y = -(height - radius)*i/100 - radius - 5;
-                ctx.beginPath();
-                ctx.lineTo(x, y);
-                ctx.lineTo(x - 20, y);
-                ctx.stroke();
-            }
+                            $("#pressure_label").text(pressure + "hPa");
+                            $("#pressure_progress").text(data.pressure_ratio + "%");
+                            $("#pressure_progress").val(data.pressure_ratio);
 
-            //20-step Degree
-            ctx.lineWidth=5;
-            for (var i = 0; i <= 100; i+=20) {
-                var y = -(height - radius)*i/100 - radius - 5;
-                ctx.beginPath();
-                ctx.lineTo(x, y);
-                ctx.lineTo(x - 25, y);
-                ctx.stroke();
-
-                ctx.font="20px Georgia";
-                ctx.textBaseline="middle"; 
-                ctx.textAlign="right";
-                ctx.fillText(i.toString(), x - 35, y);
-            }
-
-            // shape
-            ctx.lineWidth=16;
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.rect(-width/2, -height, width, height); 
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(0, -height, width/2, 0, 2 * Math.PI);
-            ctx.stroke();
-
-            ctx.fillStyle="#e6e6ff";
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.rect(-width/2, -height, width, height); 
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(0, -height, width/2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.fillStyle="#ff1a1a";
-
-            ctx.beginPath();
-            ctx.arc(0, 0, radius - offset, 0, 2 * Math.PI);
-            ctx.fill();
-
-            temp = Math.round(temp * 100) / 100;
-            var y = (height - radius)*temp/100.0 + radius + 5; 
-            ctx.beginPath();
-            ctx.rect(-width/2 + offset, -y, width - 2*offset, y); 
-            ctx.fill();
-
-            ctx.fillStyle="red";
-            ctx.font="bold 34px Georgia";
-            ctx.textBaseline="middle"; 
-            ctx.textAlign="center";
-            ctx.fillText(temp.toString() + "°C", 0, 100);
-            }
-
-            window.onload = init;
+                            $("#altitude_label").text(altitude + "m");
+                            $("#altitude_progress").text(data.altitude_ratio + "%");
+                            $("#altitude_progress").val(data.altitude_ratio);
+                        }
+                    });
+                }, 1000);
+            });
         </script>
     )====", // js
     R"=====(
-        <h1>ESP32 - Web Temperature</h1>
-        <canvas id="cvs"></canvas>
+        <div class="container">
+            <div class="nav fixed">
+                <ul>
+                    <li><a class="logo" href="javascript:void(0);" onclick="meshki.openSidenav()"><i class="fas fa-bars" aria-hidden="true"></i>منوی اصلی</a></li>
+                    <li class="nav-dropdown">
+                        <a href="javascript:void(0)" class="nav-dropdown-button">ابزار</a>
+                        <div class="nav-dropdown-content">
+                            <a href="/temperature">دما</a>
+                            <a href="/humidity">رطوبت</a>
+                            <a href="/light">نور</a>
+                            <a href="/sound">صدا</a>
+                            <a href="/camera">دوربین</a>
+                        </div>
+                    </li>
+                    <li><a href="https://github.com/Borderliner/Meshki">پیوندها</a></li>
+                    <li class="nav-dropdown hide-on-mobile">
+                        <a href="javascript:void(0)" class="nav-dropdown-button">مدیریت</a>
+                        <div class="nav-dropdown-content">
+                            <a href="#buttons-doc">Buttons</a>
+                            <a href="#sidenav-doc">Sidenav</a>
+                            <a href="#navbar-doc">Navbar</a>
+                            <a href="#layout-doc">Layout System</a>
+                            <a href="#form-doc">Forms</a>
+                            <a href="#typography-doc">Typography</a>
+                            <a href="#tables-doc">Tables</a>
+                            <a href="#footer-doc">Footer</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content">
+
+                <div class="row">
+                    <div class="col six">
+                        <h4>دما</h4>
+                        <div class="flexbox row" style="align-items: center;">
+                            <label id="temperature_label" for="heap-progress" style="margin: 0 1rem -0.5rem 1rem;">0°C</label>
+                            <progress id="temperature_progress" name="heap-progress" value="0" max="100">0%</progress>
+                        </div>
+                    </div>
+
+                    <div class="col six">
+                        <h4>رطوبت</h4>
+                        <div class="flexbox row" style="align-items: center;">
+                            <label id="humidity_label" for="heap-progress" style="margin: 0 1rem -0.5rem 1rem;">0%</label>
+                            <progress id="humidity_progress" name="heap-progress" value="0" max="100">0%</progress>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="row">
+                    <div class="col six">
+                        <h4>فشار</h4>
+                        <div class="flexbox row" style="align-items: center;">
+                            <label id="pressure_label" for="heap-progress" style="margin: 0 1rem -0.5rem 1rem;">0hPa</label>
+                            <progress id="pressure_progress" name="heap-progress" value="0" max="100">0%</progress>
+                        </div>
+                    </div>
+
+                    <div class="col six">
+                        <h4>ارتفاع</h4>
+                        <div class="flexbox row" style="align-items: center;">
+                            <label id="altitude_label" for="heap-progress" style="margin: 0 1rem -0.5rem 1rem;">0m</label>
+                            <progress id="altitude_progress" name="heap-progress" value="0" max="100">0%</progress>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     )=====", // body
 };

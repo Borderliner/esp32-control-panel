@@ -13,7 +13,7 @@ bool application::bootstrap() {
     application::serial::setup_serial();
     application::pins::setup_pins();
     application::fs::setup_filesystem();
-    // application::sensor::bme280::setup();
+    application::sensor::setup_bme280();
     application::wifi::setup_wifi();
     application::server::setup_server().start();
 

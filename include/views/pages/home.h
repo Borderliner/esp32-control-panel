@@ -88,7 +88,7 @@ static Page page_home = Page {
                     <li class="nav-dropdown">
                         <a href="javascript:void(0)" class="nav-dropdown-button">ابزار</a>
                         <div class="nav-dropdown-content">
-                            <a href="/temperator">دما</a>
+                            <a href="/temperature">دما</a>
                             <a href="/humidity">رطوبت</a>
                             <a href="/light">نور</a>
                             <a href="/sound">صدا</a>

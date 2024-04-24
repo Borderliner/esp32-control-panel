@@ -12,7 +12,7 @@ void setup_wifi() {
         delay(1000);
         Serial.println("Connecting to WiFi...");
     }
-    Serial.println("Connection Successful!");
+    Serial.println("WiFi connection successful!");
     is_initialized = true;
 
     // Print the ESP32's IP address

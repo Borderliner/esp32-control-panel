@@ -10,7 +10,7 @@
     #include <SPI.h>
 #endif
 
-namespace application::sensor::bme280 {
+namespace application::sensor {
 #define SEA_LEVEL_PRESSURE_HPA (1013.25)
 #ifdef USING_BME280_SPI
     #define BME_SCK 18
@@ -32,7 +32,7 @@ private:
 public:
     bool is_initialized = false;
 
-    BME280(uint8_t sda = 21, uint8_t scl = 22, uint8_t address = (uint8_t)119U) {
+    BME280(uint8_t sda = 21, uint8_t scl = 22, uint8_t address = 0x76) {
         Wire.begin(sda, scl);
         bool status = sensor.begin(address);
         if (!status) {
@@ -48,6 +48,8 @@ public:
                 Serial.println("Could not find a valid address to operate on. Maybe faulty sensor?");
                 Wire.end();
             }
+        } else {
+            Serial.println("BME280 sensor initialized successfully.");
         }
         is_initialized = status;
     }
@@ -151,8 +153,8 @@ public:
 };
 
 static BME280* bme280;
-const BME280* setup() {
-    bme280 = new BME280(21, 22, 0x61);
+const BME280* setup_bme280() {
+    bme280 = new BME280(21, 22, 0x76);
     if (bme280->is_initialized) {
         return bme280;
     } else {

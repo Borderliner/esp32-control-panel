@@ -11,7 +11,10 @@ namespace application::routing {
 void register_routes(AsyncWebServer &server) {
     // Serve the specified HTML pages
     server.on("/", HTTP_GET, home_page_handler);
+
+    server.on("/bme280/get", HTTP_GET, bme280_get_handler);
     server.on("/temperature", HTTP_GET, temperature_page_handler);
+    
     server.on("/led", HTTP_GET, led_page_handler);
     server.on("/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
         esp_restart();
