@@ -8,8 +8,8 @@
  */
 
 #pragma once
-#include "system/templating/page_data.h"
-#include "system/templating/page_options.h"
+#include "application/templating/page_data.h"
+#include "application/templating/page_options.h"
 #include "config/script_imports.h"
 
 #include <WString.h>

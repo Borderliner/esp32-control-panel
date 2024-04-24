@@ -1,11 +1,13 @@
 #pragma once
 
-#include "system/database.h"
+#include "application/database.h"
 
 namespace application::db {
 bool seed_database() {
+    Database database;
+    database.init("/spiffs/main.db");
     // create users table
-    execute(R"==(
+    database.execute(R"==(
         CREATE TABLE users (
             user_id int NOT NULL AUTO_INCREMENT,
             username varchar(25) NOT NULL,
@@ -15,11 +17,12 @@ bool seed_database() {
     )==");
 
     // add admin user
-    execute(R"==(
+    database.(R"==(
         INSERT INTO users (username, password)
             VALUES ('admin', 'admin');
     )==");
-
+    database.close();
+    
     return true;
 }
 }

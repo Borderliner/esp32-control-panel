@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "system/templating/page.h"
+#include "application/templating/page.h"
 using application::templating::Page;
 
 #define PAGE_404_TITLE "404 - صفحه پیدا نشد"

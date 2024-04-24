@@ -4,7 +4,7 @@
 
 #include "config/web_server.h"
 #include "config/routing.h"
-#include "system/filesystem.h"
+#include "application/filesystem.h"
 
 namespace application::server {
 static bool is_initialized = false;
@@ -43,7 +43,7 @@ public:
     }
 };
 
-static const WebServer web_server(SERVER_PORT);
+static WebServer web_server(SERVER_PORT);
 const WebServer& setup_server() {
     web_server.register_routes();
     return web_server;

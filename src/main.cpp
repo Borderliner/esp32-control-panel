@@ -7,20 +7,15 @@
  * https://esp32io.com/tutorials/esp32-web-server-multiple-pages
  */
 
-#include "config/pins.h"
-
-#include "system/serial.h"
-#include "system/web_server.h"
-#include "system/filesystem.h"
-#include "system/wifi.h"
+#include "application/bootstrap.h"
 
 void setup() {
-    application::serial::setup_serial();
-    application::pins::setup_pins();
-    application::fs::setup_filesystem();
-    application::wifi::setup_wifi();
-    application::server::setup_server().start();
-    Serial.println("Application has been initiated and is running...");
+    bool status = application::bootstrap();
+    if (status) {
+        Serial.println("Application has been initiated and is running...");
+    } else {
+        Serial.println("Error occured during bootstraping.");
+    }
 }
 
 void loop() {

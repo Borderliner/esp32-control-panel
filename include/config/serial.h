@@ -1,5 +1,7 @@
 #pragma once
 
 namespace application::serial {
-const unsigned long BAUD_SIZE = 115200;
+
+const unsigned long BAUD_SIZE = 9600;
+
 }

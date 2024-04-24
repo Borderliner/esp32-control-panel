@@ -2,7 +2,7 @@
 #include "views/pages/temperature.h"
 
 #include <ESPAsyncWebServer.h>
-#include <system/templating/page_data.h>
+#include <application/templating/page_data.h>
 
 using application::templating::PageDataJson;
 
