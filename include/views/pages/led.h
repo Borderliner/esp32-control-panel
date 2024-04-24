@@ -18,10 +18,12 @@ static Page page_led = Page {
     "", // css
     "", // js
     R"=====(
-        <h1>LED Page</h1>
-        <p>LED State: <span style="color: red;">{LED_STATE}</span></p>
-        <a href='/led?state=on'>Turn ON</a>
-        <br><br>
-        <a href='/led?state=off'>Turn OFF</a>
+        <div class="content">
+            <h1>LED Page</h1>
+            <p>LED State: <span style="color: red;">{LED_STATE}</span></p>
+            <a href='/led?state=on'>Turn ON</a>
+            <br><br>
+            <a href='/led?state=off'>Turn OFF</a>
+        </div>
     )=====", // body
 };

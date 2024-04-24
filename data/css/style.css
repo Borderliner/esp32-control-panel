@@ -1,3 +1,45 @@
 @import url('./lib/vazirmatn.css');
 @import url('./lib/meshki.min.css');
 @import url('./lib/meshki.rtl.min.css');
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: unset;
+}
+.content {
+    flex-grow: 1;
+    margin-top: 52px;
+}
+.footer {
+    position: unset;
+}
+
+.power-button,
+.restart-button {
+    position: absolute;
+    padding-bottom: unset !important;
+    height: 55px;
+}
+.power-button {
+    bottom: 65px;
+}
+.restart-button {
+    bottom: 135px;
+}
+.power-button span.label,
+.restart-button span.label {
+    position: relative;
+    bottom: 9px;
+}
+.power-button span.label {
+    margin: auto 13px;
+}
+.restart-button span.label {
+    margin: auto 5px;
+}
+
+progress {
+    width: 100%;
+}
